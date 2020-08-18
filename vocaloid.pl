@@ -59,8 +59,6 @@ cancionQueDureMas(Cantante, TiempoMinimo):-
 
     %not((duracionCancion(Cantante, Duracion), Duracion > 4)).
 
-
-
 %concierto(Nombre, Pais, CantidadFama, Tipo)
 %gigante(CantidadMinimaCanciones, DuracionTotalDeTodasCanciones, ).
 %mediano(DuracionTotalMaximaTodasCanciones)
@@ -101,7 +99,7 @@ cumpleTiempoTotal(Cantante, MinimaDuracion):-
 
 cumpleRequisitosConcierto(Cantante, mediano(TiempoMaximo)):-
     tiempoCantante(Cantante, DuracionTotal),
-    DuracionTotal <= TiempoMaximo.
+    DuracionTotal =< TiempoMaximo.
 
 cumpleRequisitosConcierto(Cantante, pequenio(Duracion)):-
     duracionCancion(Cantante, DuracionCancion),
@@ -129,8 +127,37 @@ forall((nivelDeFama(OtroVocaloid, OtroNivelDeFama), Vocaloid \= OtroVocaloid), N
 
 % Con Negacion
 vocaloidMasFamoso(Vocaloid):-
-    nivelDeFama(Vocaloid, NivelDeFama)
-    not((nivelDeFama(OtroVocaloid, OtroNivelDeFama), OtroNivelDeFama > NivelDeFama).
+    nivelDeFama(Vocaloid, NivelDeFama),
+    not((nivelDeFama(_, OtroNivelDeFama), OtroNivelDeFama > NivelDeFama)).
+
+/*Queremos verificar si un vocaloid es el único que participa de un concierto, 
+esto se cumple si ninguno de sus conocidos ya sea directo o indirectos 
+(en cualquiera de los niveles) participa en el mismo concierto.
+
+Sabemos que:
+megurineLuka conoce a hatsuneMiku  y a gumi 
+gumi conoce a seeU
+seeU conoce a kaito */
+
+esElUnicoEnParticipar(Vocaloid, Concierto):-
+    puedeParticiparEn(Concierto, Vocaloid),
+    forall(conocido(Vocaloid, Conocido), not(puedeParticiparEn(Concierto, Conocido))).
+
+conocido(megurineLuka, hatsuneMiku).
+conocido(megurineLuka, gumi).
+conocido(gumi, seeU).
+conocido(seeU, kaito).
+
+conocido(Vocaloid, ConocidoIndirecto):- 
+    conocidoIndirecto(Vocaloid, ConocidoIndirecto).
+    
+conocidoIndirecto(Vocaloid, ConocidoIndirecto):-
+    conocido(Vocaloid, Conocido),
+    conocido(Conocido, ConocidoIndirecto),
+    ConocidoIndirecto \= Vocaloid.
+
+
+
 
 
 
