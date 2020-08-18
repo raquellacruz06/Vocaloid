@@ -143,20 +143,23 @@ esElUnicoEnParticipar(Vocaloid, Concierto):-
     puedeParticiparEn(Concierto, Vocaloid),
     forall(conocido(Vocaloid, Conocido), not(puedeParticiparEn(Concierto, Conocido))).
 
-conocido(megurineLuka, hatsuneMiku).
-conocido(megurineLuka, gumi).
-conocido(gumi, seeU).
-conocido(seeU, kaito).
+conoce(megurineLuka, hatsuneMiku).
+conoce(megurineLuka, gumi).
+conoce(gumi, seeU).
+conoce(seeU, kaito).
 
-conocido(Vocaloid, ConocidoIndirecto):- 
-    conocidoIndirecto(Vocaloid, ConocidoIndirecto).
+conocido(Vocaloid, ConocidoDirecto):- 
+    conoce(Vocaloid, ConocidoDirecto).
     
-conocidoIndirecto(Vocaloid, ConocidoIndirecto):-
-    conocido(Vocaloid, Conocido),
-    conocido(Conocido, ConocidoIndirecto),
-    ConocidoIndirecto \= Vocaloid.
+conocido(Vocaloid, ConocidoIndirecto):-
+    conoce(Vocaloid, Conocido),
+    conocido(Conocido, ConocidoIndirecto).
 
-
+/*Supongamos que aparece un nuevo tipo de concierto y necesitamos tenerlo en cuenta en 
+nuestra solución, explique los cambios que habría que realizar 
+para que siga todo funcionando. ¿Qué conceptos facilitaron dicha implementación?
+Habría que agregar los nuevos tipos a la base de conocimientos y ampliar el predicado cumpleRequisitosConcierto con los nuevos requisitos
+gracias al polimorfismo, que permite tratar cosas distintas como una sola y difereciarlos solo en las funciones primitivas, sin modificar el código principal.*/
 
 
 
